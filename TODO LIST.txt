@@ -1,0 +1,6 @@
+TODO LIST
+-Character Roster
+-Different attacks
+-Guard
+-Refactor attack function
+-Refactor Sprite class
