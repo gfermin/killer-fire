@@ -1,0 +1,61 @@
+* {
+    box-sizing: border-box;
+}
+
+.container-div {
+    position: relative;
+    display: inline-block;
+}
+
+.health-bar-container {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 20px;
+}
+
+.health-bar {
+    background-color: yellow; 
+    height: 30px; 
+    width: 100%;
+}
+
+.health-bar-timer {
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.fp-health-bar {
+    position: relative; 
+    height: 30px; 
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sp-health-bar {
+    position: relative; 
+    height: 30px; 
+    width: 100%
+}
+
+.fp-deacresing-health-bar {
+    position: absolute;
+    background: blue;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+
+.sp-deacresing-health-bar {
+    position: absolute;
+    background: blue;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
