@@ -32,6 +32,7 @@ class Sprite {
     };
     this.color = color;
     this.isAttacking;
+    this.health = 100;
   }
 
   //It draws the players
@@ -172,6 +173,8 @@ function animate() {
     firstPlayer.isAttacking
   ) {
     firstPlayer.isAttacking = false;
+    secondPlayer.health -= 20;
+    document.querySelector("#spHealth").style.width = secondPlayer.health + "%";
     console.log("Player 2 got hit");
   }
 
@@ -180,6 +183,8 @@ function animate() {
     secondPlayer.isAttacking
   ) {
     secondPlayer.isAttacking = false;
+    firstPlayer.health -= 20;
+    document.querySelector("#fpHealth").style.width = firstPlayer.health + "%";
     console.log("Player 1 got hit");
   }
 }

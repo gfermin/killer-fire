@@ -4,3 +4,4 @@ TODO LIST
 -Guard
 -Refactor attack function
 -Refactor Sprite class
+-Add damage per attack to the sprite class

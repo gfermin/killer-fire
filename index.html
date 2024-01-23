@@ -1,3 +1,24 @@
-<canvas></canvas>
+<head>
+  <link rel="stylesheet" href="main.css" />
+</head>
 
-<script src="main.js"></script>
+<body>
+  <div class="container-div">
+    <div class="health-bar-container">
+      <!--Player 1 health-->
+      <div class="fp-health-bar">
+        <div class="health-bar"></div>
+        <div id="fpHealth" class="fp-deacresing-health-bar"></div>
+      </div>
+      <!--Timer-->
+      <div class="health-bar-timer"></div>
+      <!--Player 2 health-->
+      <div class="sp-health-bar">
+        <div class="health-bar"></div>
+        <div id="spHealth" class="sp-deacresing-health-bar"></div>
+      </div>
+    </div>
+    <canvas></canvas>
+  </div>
+  <script src="main.js"></script>
+</body>
