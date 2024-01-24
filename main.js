@@ -145,6 +145,35 @@ function hitBoxCollision({ player1, player2 }) {
   );
 }
 
+function gameWinner({ player1, player2, timerId }) {
+  clearTimeout(timerId);
+  document.querySelector("#bResult").style.display = "flex";
+  if (player1.health === player2.health) {
+    document.querySelector("#bResult").innerHTML = "TIE!!!";
+  } else if (player1.health > player2.health) {
+    document.querySelector("#bResult").innerHTML = "PLAYER 1 WINS!!!";
+  } else if (player1.health < player2.health) {
+    document.querySelector("#bResult").innerHTML = "PLAYER 2 WINS!!!";
+  }
+}
+
+//Function that decrease the timer over time
+let timer = 60;
+let timerId;
+function decreaseTimer() {
+  if (timer > 0) {
+    timerId = setTimeout(decreaseTimer, 1000);
+    timer--;
+    document.querySelector("#timer").innerHTML = timer;
+  }
+
+  if (timer === 0) {
+    gameWinner({ player1: firstPlayer, player2: secondPlayer });
+  }
+}
+
+decreaseTimer();
+
 //Function that loops over itself to create the continous animation
 function animate() {
   window.requestAnimationFrame(animate);
@@ -175,7 +204,6 @@ function animate() {
     firstPlayer.isAttacking = false;
     secondPlayer.health -= 20;
     document.querySelector("#spHealth").style.width = secondPlayer.health + "%";
-    console.log("Player 2 got hit");
   }
 
   if (
@@ -185,7 +213,15 @@ function animate() {
     secondPlayer.isAttacking = false;
     firstPlayer.health -= 20;
     document.querySelector("#fpHealth").style.width = firstPlayer.health + "%";
-    console.log("Player 1 got hit");
+  }
+
+  //end game based on health
+  if (firstPlayer.health <= 0 || secondPlayer.health <= 0) {
+    gameWinner({
+      player1: firstPlayer,
+      player2: secondPlayer,
+      timerId: timerId,
+    });
   }
 }
 
