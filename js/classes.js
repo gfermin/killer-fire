@@ -1,20 +1,45 @@
 class Sprite {
-  constructor({ position, imageSrc }) {
+  constructor({ position, imageSrc, scale = 1, maxFrames = 1 }) {
     this.position = position;
     this.width = 50;
     this.height = 150;
     this.image = new Image();
     this.image.src = imageSrc;
+    this.scale = scale;
+    this.maxFrames = maxFrames;
+    this.currentFrames = 0;
+    this.framesElapsed = 0;
+    this.holdFrames = 7;
   }
 
   //It draws the players
   draw() {
-    context.drawImage(this.image, this.position.x, this.position.y);
+    context.drawImage(
+      this.image,
+      this.currentFrames * (this.image.width / this.maxFrames),
+      0,
+      this.image.width / this.maxFrames,
+      this.image.height,
+
+      this.position.x,
+      this.position.y,
+      (this.image.width / this.maxFrames) * this.scale,
+      this.image.height * this.scale
+    );
   }
 
   //It updates the functionalities and movements of the players
   update() {
     this.draw();
+
+    this.framesElapsed++;
+    if (this.framesElapsed % this.holdFrames === 0) {
+      if (this.currentFrames < this.maxFrames - 1) {
+        this.currentFrames++;
+      } else {
+        this.currentFrames = 0;
+      }
+    }
   }
 }
 

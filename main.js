@@ -21,6 +21,16 @@ const background = new Sprite({
   imageSrc: "src/background.png",
 });
 
+const shop = new Sprite({
+  position: {
+    x: 630,
+    y: 127,
+  },
+  imageSrc: "src/shop.png",
+  scale: 2.75,
+  maxFrames: 6,
+});
+
 //Selected player 1
 const firstPlayer = new Fighter({
   position: {
@@ -95,7 +105,9 @@ function animate() {
   window.requestAnimationFrame(animate);
   context.fillStyle = "black";
   context.fillRect(0, 0, canvas.width, canvas.height);
+
   background.update();
+  shop.update();
   firstPlayer.update();
   secondPlayer.update();
 
