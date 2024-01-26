@@ -15,7 +15,7 @@ const gravity = 0.7;
 
 //Class that contains all of the functionalities of our players
 class Sprite {
-  constructor({ position, velocity, color, offset }) {
+  constructor({ position, velocity, color, offset, attacks }) {
     this.position = position;
     this.velocity = velocity;
     this.width = 50;
@@ -33,6 +33,8 @@ class Sprite {
     this.color = color;
     this.isAttacking;
     this.health = 100;
+    this.attacks = attacks;
+    this.attack_type;
   }
 
   //It draws the players
@@ -71,6 +73,7 @@ class Sprite {
 
   attack() {
     this.isAttacking = true;
+    this.atta;
     setTimeout(() => {
       this.isAttacking = false;
     }, 100);
@@ -92,6 +95,11 @@ const firstPlayer = new Sprite({
     x: 0,
     y: 0,
   },
+  attacks: {
+    simple: 10,
+    strong: 20,
+    super: 35,
+  },
 });
 
 //Selected player 2
@@ -108,6 +116,11 @@ const secondPlayer = new Sprite({
   offset: {
     x: -50,
     y: 0,
+  },
+  attacks: {
+    simple: 10,
+    strong: 20,
+    super: 35,
   },
 });
 
@@ -172,7 +185,73 @@ function decreaseTimer() {
   }
 }
 
+//Handles players move sets
+function moveSet(attacker) {
+  if (attacker === "fp") {
+    switch (firstPlayer.attack_type) {
+      case "simple":
+        secondPlayer.health -= firstPlayer.attacks.simple;
+        break;
+      case "strong":
+        secondPlayer.health -= firstPlayer.attacks.strong;
+        break;
+      case "super":
+        secondPlayer.health -= firstPlayer.attacks.super;
+        break;
+      default:
+        // Handle default case if needed
+        break;
+    }
+    document.querySelector("#spHealth").style.width = secondPlayer.health + "%";
+  } else if (attacker === "sp") {
+    switch (secondPlayer.attack_type) {
+      case "simple":
+        firstPlayer.health -= secondPlayer.attacks.simple;
+        break;
+      case "strong":
+        firstPlayer.health -= secondPlayer.attacks.strong;
+        break;
+      case "super":
+        firstPlayer.health -= secondPlayer.attacks.super;
+        break;
+      default:
+        // Handle default case if needed
+        break;
+    }
+    document.querySelector("#fpHealth").style.width = firstPlayer.health + "%";
+  }
+}
+
 decreaseTimer();
+
+// function handlePlayerMovement(player, keyRight, keyLeft) {
+//   player.velocity.x = 0;
+//   if (keyRight.pressed && player.lastKey === keyRight.name) {
+//     player.velocity.x = 5;
+//   } else if (keyLeft.pressed && player.lastKey === keyLeft.name) {
+//     player.velocity.x = -5;
+//   }
+// }
+
+function handlePlayerAttack(attacker, target, playerType) {
+  if (
+    hitBoxCollision({ player1: attacker, player2: target }) &&
+    attacker.isAttacking
+  ) {
+    attacker.isAttacking = false;
+    moveSet(playerType);
+  }
+}
+
+function checkEndGame() {
+  if (firstPlayer.health <= 0 || secondPlayer.health <= 0) {
+    gameWinner({
+      player1: firstPlayer,
+      player2: secondPlayer,
+      timerId: timerId,
+    });
+  }
+}
 
 //Function that loops over itself to create the continous animation
 function animate() {
@@ -196,33 +275,10 @@ function animate() {
     secondPlayer.velocity.x = -5;
   }
 
-  //Detect for collision
-  if (
-    hitBoxCollision({ player1: firstPlayer, player2: secondPlayer }) &&
-    firstPlayer.isAttacking
-  ) {
-    firstPlayer.isAttacking = false;
-    secondPlayer.health -= 20;
-    document.querySelector("#spHealth").style.width = secondPlayer.health + "%";
-  }
+  handlePlayerAttack(firstPlayer, secondPlayer, "fp");
+  handlePlayerAttack(secondPlayer, firstPlayer, "sp");
 
-  if (
-    hitBoxCollision({ player1: secondPlayer, player2: firstPlayer }) &&
-    secondPlayer.isAttacking
-  ) {
-    secondPlayer.isAttacking = false;
-    firstPlayer.health -= 20;
-    document.querySelector("#fpHealth").style.width = firstPlayer.health + "%";
-  }
-
-  //end game based on health
-  if (firstPlayer.health <= 0 || secondPlayer.health <= 0) {
-    gameWinner({
-      player1: firstPlayer,
-      player2: secondPlayer,
-      timerId: timerId,
-    });
-  }
+  checkEndGame();
 }
 
 animate();
@@ -243,6 +299,15 @@ window.addEventListener("keydown", (event) => {
       break;
     case "x":
       firstPlayer.attack();
+      firstPlayer.attack_type = "simple";
+      break;
+    case "c":
+      firstPlayer.attack();
+      firstPlayer.attack_type = "strong";
+      break;
+    case " ":
+      firstPlayer.attack();
+      firstPlayer.attack_type = "super";
       break;
 
     //Second player movement keys
@@ -259,6 +324,15 @@ window.addEventListener("keydown", (event) => {
       break;
     case "1":
       secondPlayer.attack();
+      secondPlayer.attack_type = "simple";
+      break;
+    case "2":
+      secondPlayer.attack();
+      secondPlayer.attack_type = "strong";
+      break;
+    case "0":
+      secondPlayer.attack();
+      secondPlayer.attack_type = "super";
       break;
   }
 });
