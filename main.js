@@ -29,34 +29,68 @@ const shop = new Sprite({
   imageSrc: "src/shop.png",
   scale: 2.75,
   maxFrames: 6,
+  holdFrames: 10,
 });
 
 //Selected player 1
 const firstPlayer = new Fighter({
   position: {
-    x: 0,
+    x: 150,
     y: 0,
   },
   velocity: {
     x: 0,
     y: 0,
   },
-  color: "blue",
   offset: {
-    x: 0,
-    y: 0,
+    x: 215,
+    y: 157,
   },
   attacks: {
     simple: 10,
     strong: 20,
     super: 35,
   },
+  imageSrc: "src/samuraiMack/Idle.png",
+  scale: 2.5,
+  maxFrames: 8,
+  holdFrames: 5,
+  sprites: {
+    idle: {
+      imageSrc: "src/samuraiMack/Idle.png",
+      maxFrames: 8,
+    },
+    run: {
+      imageSrc: "src/samuraiMack/Run.png",
+      maxFrames: 8,
+    },
+    jump: {
+      imageSrc: "src/samuraiMack/Jump.png",
+      maxFrames: 2,
+    },
+    fall: {
+      imageSrc: "src/samuraiMack/Fall.png",
+      maxFrames: 2,
+    },
+    attack1: {
+      imageSrc: "src/samuraiMack/Attack1.png",
+      maxFrames: 6,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: 0,
+      y: 0,
+    },
+    width: 100,
+    height: 50,
+  },
 });
 
 //Selected player 2
 const secondPlayer = new Fighter({
   position: {
-    x: 400,
+    x: 500,
     y: 100,
   },
   velocity: {
@@ -66,12 +100,46 @@ const secondPlayer = new Fighter({
   color: "red",
   offset: {
     x: -50,
-    y: 0,
+    y: 172,
   },
   attacks: {
     simple: 10,
     strong: 20,
     super: 35,
+  },
+  imageSrc: "src/kenji/Idle.png",
+  scale: 2.5,
+  maxFrames: 4,
+  holdFrames: 5,
+  sprites: {
+    idle: {
+      imageSrc: "src/kenji/Idle.png",
+      maxFrames: 4,
+    },
+    run: {
+      imageSrc: "src/kenji/Run.png",
+      maxFrames: 8,
+    },
+    jump: {
+      imageSrc: "src/kenji/Jump.png",
+      maxFrames: 2,
+    },
+    fall: {
+      imageSrc: "src/kenji/Fall.png",
+      maxFrames: 2,
+    },
+    attack1: {
+      imageSrc: "src/kenji/Attack1.png",
+      maxFrames: 4,
+    },
+  },
+  attackBox: {
+    offset: {
+      x: 240,
+      y: 0,
+    },
+    width: 100,
+    height: 50,
   },
 });
 
@@ -112,18 +180,44 @@ function animate() {
   secondPlayer.update();
 
   firstPlayer.velocity.x = 0;
+  secondPlayer.velocity.x = 0;
+
   if (keys.ArrowRight.pressed && firstPlayer.lastKey === "ArrowRight") {
     firstPlayer.velocity.x = 5;
+    firstPlayer.switchSprite("run");
   } else if (keys.ArrowLeft.pressed && firstPlayer.lastKey === "ArrowLeft") {
     firstPlayer.velocity.x = -5;
+    firstPlayer.switchSprite("run");
+  } else {
+    firstPlayer.switchSprite("idle");
   }
 
-  secondPlayer.velocity.x = 0;
+  //Jumping first player
+  if (firstPlayer.velocity.y < 0) {
+    firstPlayer.switchSprite("jump");
+  } else if (firstPlayer.velocity.y > 0) {
+    firstPlayer.switchSprite("fall");
+  }
+
   if (keys.s6.pressed && secondPlayer.lastKey === "s6") {
     secondPlayer.velocity.x = 5;
+    secondPlayer.switchSprite("run");
   } else if (keys.s4.pressed && secondPlayer.lastKey === "s4") {
     secondPlayer.velocity.x = -5;
+    secondPlayer.switchSprite("run");
+  } else {
+    secondPlayer.switchSprite("idle");
   }
+
+  //Jumping second player
+  if (secondPlayer.velocity.y < 0) {
+    secondPlayer.switchSprite("jump");
+  } else if (secondPlayer.velocity.y > 0) {
+    secondPlayer.switchSprite("fall");
+  }
+
+  // handlePlayerMovementAndSprite(firstPlayer, keys.ArrowRight, keys.ArrowLeft);
+  // handlePlayerMovementAndSprite(secondPlayer, keys.s6, keys.s4);
 
   handlePlayerAttack(firstPlayer, secondPlayer, "fp");
   handlePlayerAttack(secondPlayer, firstPlayer, "sp");
@@ -145,7 +239,7 @@ window.addEventListener("keydown", (event) => {
       firstPlayer.lastKey = "ArrowLeft";
       break;
     case "ArrowUp":
-      firstPlayer.velocity.y = -12;
+      firstPlayer.velocity.y = -14;
       break;
     case "x":
       firstPlayer.attack();
@@ -170,7 +264,7 @@ window.addEventListener("keydown", (event) => {
       secondPlayer.lastKey = "s4";
       break;
     case "8":
-      secondPlayer.velocity.y = -12;
+      secondPlayer.velocity.y = -14;
       break;
     case "1":
       secondPlayer.attack();

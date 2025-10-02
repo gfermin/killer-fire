@@ -15,7 +15,7 @@ function gameWinner({ player1, player2, timerId }) {
   if (player1.health === player2.health) {
     document.querySelector("#bResult").innerHTML = "TIE!!!";
   } else if (player1.health > player2.health) {
-    document.querySelector("#bResult").innerHTML = "PLAYER 1 WINS!!!";
+    document.querySelector("#bResult").innerHTML = "LICEY CAMPEON!!!";
   } else if (player1.health < player2.health) {
     document.querySelector("#bResult").innerHTML = "PLAYER 2 WINS!!!";
   }
@@ -73,14 +73,25 @@ function moveSet(attacker) {
   }
 }
 
-// function handlePlayerMovement(player, keyRight, keyLeft) {
-//   player.velocity.x = 0;
-//   if (keyRight.pressed && player.lastKey === keyRight.name) {
-//     player.velocity.x = 5;
-//   } else if (keyLeft.pressed && player.lastKey === keyLeft.name) {
-//     player.velocity.x = -5;
-//   }
-// }
+function handlePlayerMovementAndSprite(player, keyRight, keyLeft) {
+  player.velocity.x = 0;
+  if (keyRight.pressed && player.lastKey === keyRight.name) {
+    player.velocity.x = 5;
+    player.switchSprite("run");
+  } else if (keyLeft.pressed && player.lastKey === keyLeft.name) {
+    player.velocity.x = -5;
+    player.switchSprite("run");
+  } else {
+    player.switchSprite("idle");
+  }
+
+  // Jumping
+  if (player.velocity.y < 0) {
+    player.switchSprite("jump");
+  } else if (player.velocity.y > 0) {
+    player.switchSprite("fall");
+  }
+}
 
 function handlePlayerAttack(attacker, target, playerType) {
   if (
